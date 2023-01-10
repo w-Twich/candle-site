@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="POST" action="{% url 'candletime:new_candle' pk %}">
+    {% csrf_token %}
+    <div class="container mt-5">
+        <div class="mb-3">
+            <h2>This is a BRAND NEW CANDLE!</h2>
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputName" class="form-label">Give your new friend a GREAT name:</label>
+            <input type="text" placeholder="Candle Name" id="candle_name" name="candle_name" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+</form>
+{% endblock %}

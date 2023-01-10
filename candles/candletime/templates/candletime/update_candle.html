@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <h1 class="text-center mb-3">{{ candle.candle_name }}</h1>
+    
+    <form method="post" action="{% url 'candletime:candle' pk %}">
+        {% csrf_token %}
+        {% if candle.status %}
+            <h2>{{ candle.candle_name }} is currently <strong>LIT</strong>!</h2>
+            <input type="submit" class="btn btn-primary" value="Extinguish {{ candle.candle_name }}">
+        {% else %}
+            <h2>{{ candle.candle_name }} is currently not lit.</h2>
+            <input type="submit" class="btn btn-primary" value="Light {{ candle.candle_name }}">
+        {% endif %}
+    </form>
+</div>
+<div class="container mt-3">
+    <h2>{{ candle.candle_name }}'s prior work:</h2>
+    {% for item in candle_detail %}
+    <p>{{ item.light_time }}</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
