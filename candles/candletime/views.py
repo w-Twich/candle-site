@@ -3,6 +3,7 @@ from .models import Candle, Candle_detail
 from .forms import NewCandleForm, CandleForm
 from django.urls import reverse
 from django.utils import timezone
+from django.db.models import F, Sum
 
 
 # Create your views here.
@@ -13,7 +14,9 @@ def candle(request, pk):
     except Candle.DoesNotExist:
         response = redirect('new-candle/')
         return response
-    candle_detail = Candle_detail.objects.filter(candle=pk)
+    candle_detail = Candle_detail.objects.filter(candle=pk).annotate(time_lit = F('extinguish_time') - F('light_time'))
+
+    total_burn_time = candle_detail.aggregate(Sum('time_lit'))['time_lit__sum']
 
     # Toggle the candle status
     if request.method == 'POST':
@@ -31,9 +34,9 @@ def candle(request, pk):
 
             candle.status = not candle.status
             candle.save()
-            return redirect(reverse('candletime:candle', kwargs={'pk':pk}), {'candle_detail':candle_detail})
+            return redirect(reverse('candletime:candle', kwargs={'pk':pk}), {'candle_detail':candle_detail, 'burn_time':total_burn_time})
     else:
-        return render(request, 'candletime/update_candle.html', {'candle': candle, 'pk':pk, 'candle_detail':candle_detail})
+        return render(request, 'candletime/update_candle.html', {'candle': candle, 'pk':pk, 'candle_detail':candle_detail, 'burn_time':total_burn_time})
 
 def new_candle(request, pk):
     if request.method == 'POST':

@@ -16,9 +16,17 @@
     </form>
 </div>
 <div class="container mt-3">
-    <h2>{{ candle.candle_name }}'s prior work:</h2>
+    <p class="lead"> {{ candle.candle_name }} Has lit up your life for a total of {{ burn_time }}</p>
+</div>
+<div class="container mt-5">
+    <div class="mb-3">
+        <h2>{{ candle.candle_name }}'s prior work:</h2>
+    </div>
     {% for item in candle_detail %}
-    <p>{{ item.light_time }}</p>
+    <p class="lead">{{ item.light_time|date:'m/d/y h:i' }} - {{ item.extinguish_time|date:'m/d/y h:i' }}</p>
+    <div class="container ml-5">
+        <p class="lead">Burn Time: {{ item.time_lit }}</p>
+    </div>
     {% endfor %}
 </div>
 
