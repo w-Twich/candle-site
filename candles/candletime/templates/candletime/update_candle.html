@@ -1,7 +1,8 @@
 {% extends "base.html" %}
+{% load candle_extras %}
 {% block content %}
 
-<div class="container mt-5">
+<div class="container mt-5 pt-5">
     <h1 class="text-center mb-3">{{ candle.candle_name }}</h1>
     
     <form method="post" action="{% url 'candletime:candle' pk %}">
@@ -16,7 +17,7 @@
     </form>
 </div>
 <div class="container mt-3">
-    <p class="lead"> {{ candle.candle_name }} Has lit up your life for a total of {{ burn_time }}</p>
+    <p class="lead"> {{ candle.candle_name }} Has lit up your life for a total of {{ burn_time | duration:'phrase'}}.</p>
 </div>
 <div class="container mt-5">
     <div class="mb-3">
@@ -25,7 +26,9 @@
     {% for item in candle_detail %}
     <p class="lead">{{ item.light_time|date:'m/d/y h:i' }} - {{ item.extinguish_time|date:'m/d/y h:i' }}</p>
     <div class="container ml-5">
-        <p class="lead">Burn Time: {{ item.time_lit }}</p>
+        {% if item.extinguish_time %}
+        <p class="lead">Burn Time: {{ item.time_lit | duration:'phrase' }}</p>
+        {% endif %}
     </div>
     {% endfor %}
 </div>

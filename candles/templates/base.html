@@ -14,6 +14,29 @@
     {% bootstrap_messages %}
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg bg-primary navbar-dark py-3 fixed-top">
+        <div class="container">
+            <a href="{% url 'candletime:index' %}" class="navbar-brand">Candle Tracker</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navmenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navmenu">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item border-bottom text-center">
+                        <a href="/candles/" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item border-bottom text-center">
+                        <a href="/candles/about/" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item border-bottom text-center">
+                        <a href="/candles/contact/" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     {% block content %}
 
     {% endblock content %}
