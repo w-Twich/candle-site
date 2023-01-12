@@ -72,7 +72,12 @@ def duration(value, mode=""):
                 )
             )
         if seconds:
-            None
+            response.append(
+                "{seconds} second{plural_suffix}".format(
+                    seconds=seconds,
+                    plural_suffix=pluralize(seconds),
+                )
+            )
         if microseconds:
             None
 

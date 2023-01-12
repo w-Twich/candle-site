@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-5 pt-5">
     {% for candle in candles %}
     <a href="{% url 'candletime:candle' candle.pk %}">{{ candle.candle_name }}</a>
     {% endfor %}

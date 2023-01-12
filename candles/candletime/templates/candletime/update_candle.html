@@ -17,7 +17,9 @@
     </form>
 </div>
 <div class="container mt-3">
-    <p class="lead"> {{ candle.candle_name }} Has lit up your life for a total of {{ burn_time | duration:'phrase'}}.</p>
+    {% if burn_time %}
+    <p class="lead"> {{ candle.candle_name }} has lit up your life for a total of {{ burn_time | duration:'phrase'}}.</p>
+    {% endif %}
 </div>
 <div class="container mt-5">
     <div class="mb-3">
