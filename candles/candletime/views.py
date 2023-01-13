@@ -1,18 +1,23 @@
 from django.shortcuts import render, redirect
-from .models import Candle, Candle_detail
-from .forms import NewCandleForm, CandleForm
+from .models import Candle, Candle_detail, UserCandle
+from django.contrib.auth.models import User
+from .forms import NewCandleForm, CandleForm, RegisterForm
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import F, Sum, Func
-
+from django.contrib import messages
 
 
 # Create your views here.
 
 def index(request):
-    candles = Candle.objects.all()
-
-    context = {'candles':candles}
+    if request.user.id is not None:
+        user_candles = UserCandle.objects.filter(user=request.user)
+        candles = Candle.objects.filter(id__in=user_candles)
+        context = {'candles':candles}
+    else:
+        context = {}
+    
     return render(request, 'candletime/index.html', context)
 
 def candle(request, pk):
@@ -72,3 +77,24 @@ def new_candle(request, pk):
         form = NewCandleForm()
     return render(request, 'candletime/new_candle.html', {'form': form, 'pk': pk})
 
+# New User Registration
+def register(request):
+    if request.method == 'GET':
+        form  = RegisterForm()
+        context = {'form': form}
+        return render(request, 'candletime/register.html', context)
+    
+    if request.method == 'POST':
+        form  = RegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Account was created for ' + user)
+            return redirect('candletime:index')
+        else:
+            print('Form is not valid')
+            messages.error(request, 'Error Processing Your Request')
+            context = {'form': form}
+            return render(request, 'candletime/register.html', context)
+
+    return render(request, 'candletime/register.html', {})

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 
@@ -17,3 +18,7 @@ class Candle_detail(models.Model):
 
     def __str__(self):
         return str(self.candle)
+
+class UserCandle(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    candle = models.ForeignKey(Candle, on_delete=models.CASCADE)

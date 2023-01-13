@@ -11,22 +11,22 @@ def duration(value, mode=""):
 
     remainder = value
     response = ""
-    days = False
-    hours = False
-    minutes = False
-    seconds = False
-    microseconds = False
+    days = 0
+    hours = 0
+    minutes = 0
+    seconds = 0
+    microseconds = 0
 
     if remainder.days > 0:
         days = remainder.days
         remainder -= datetime.timedelta(days=remainder.days)
 
-    if round(remainder.seconds/3600) > 1:
-        hours = round(remainder.seconds/3600)
+    if remainder.seconds//3600 > 0:
+        hours = remainder.seconds//3600
         remainder -= datetime.timedelta(hours=hours)
 
-    if round(remainder.seconds/60) > 1:
-        minutes = round(remainder.seconds/60)
+    if remainder.seconds//60 > 0:
+        minutes = remainder.seconds//60
         remainder -= datetime.timedelta(minutes=minutes)
 
     if remainder.seconds > 0:
