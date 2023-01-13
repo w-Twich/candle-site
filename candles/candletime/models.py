@@ -22,3 +22,6 @@ class Candle_detail(models.Model):
 class UserCandle(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     candle = models.ForeignKey(Candle, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.candle)

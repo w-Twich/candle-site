@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .forms import NewCandleForm, CandleForm, RegisterForm
 from django.urls import reverse
 from django.utils import timezone
-from django.db.models import F, Sum, Func
+from django.db.models import F, Sum, Func, Max
 from django.contrib import messages
 
 
@@ -13,12 +13,19 @@ from django.contrib import messages
 def index(request):
     if request.user.id is not None:
         user_candles = UserCandle.objects.filter(user=request.user)
-        candles = Candle.objects.filter(id__in=user_candles)
+        candles = user_candles.select_related('candle').annotate(date=Max('candle__candle_detail__light_time'))
+        #candles = Candle.objects.filter(id__in=user_candles)
         context = {'candles':candles}
     else:
         context = {}
     
     return render(request, 'candletime/index.html', context)
+
+def about(request):
+    return render(request, 'candletime/about.html')
+
+def contact(request):
+    return render(request, 'candletime/contact.html')
 
 def candle(request, pk):
     # Get the current candle status
@@ -32,7 +39,7 @@ def candle(request, pk):
             F('extinguish_time') - F('light_time'),
             function="ROUND"
         )
-    )
+    ).order_by('-light_time')
 
     total_burn_time = candle_detail.aggregate(Sum('time_lit'))['time_lit__sum']
 
