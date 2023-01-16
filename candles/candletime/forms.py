@@ -52,3 +52,8 @@ class RegisterForm(UserCreationForm):
         fields = [
         'username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'check',
 ]
+
+# Form to add an existing candle to a logged in user profile
+class LinkCandleForm(forms.Form):
+    candle_key = forms.IntegerField(required=False)
+    user_key = forms.IntegerField(required=False)

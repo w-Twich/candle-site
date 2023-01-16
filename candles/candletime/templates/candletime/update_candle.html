@@ -3,6 +3,13 @@
 {% block content %}
 
 <div class="container mt-5 pt-5">
+    {% if is_connected == False and user.is_authenticated %}
+    <form method="post" action="{% url 'candletime:link_user' pk %}">
+        {% csrf_token %}
+        <input type="submit" class="btn btn-secondary" value="Add to my candles">
+    </form>
+    {% endif %}
+
     <h1 class="text-center mb-3">{{ candle.candle_name }}</h1>
     
     <form method="post" action="{% url 'candletime:candle' pk %}">

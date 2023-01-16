@@ -2,36 +2,42 @@
 {% block content %}
 <div class="container-fluid mt-5 pt-5">
     {% if user.is_authenticated %}
-    <p class="lead">Welcome {{ user.username }}! Your candles:</p>
+    <div class="container">
+      <p class="lead">Welcome {{ user.first_name }}!</p>
+      <div class="container mb-2 px-0">
+        <a href="{% url 'candletime:new_candle_nokey' %}" role="button" class="btn btn-primary">New Candle</a>
+      </div>
+      <p class="lead">Your Candles:</p>
+    </div>
     {% else %}
     <p class="lead">Please <a href="{% url 'candletime:login' %}">Login</a> to see your candles!</p>
     {% endif %}
 
-    <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Candle</th>
-            <th scope="col">Status</th>
-            <th scope="col">Last Lit</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for candle in candles %}  
-          <tr>
-            <th scope="row">
-                <a href="{% url 'candletime:candle' candle.candle.pk %}">{{ candle.candle.candle_name }}</a>
-            </th>
-            <td>
-                {% if candle.candle.status == TRUE %}
-                Lit
-                {% else %}
-                Extinguished
-                {% endif %}
-            </td>
-            <td>{{ candle.date|date:'m/d/y' }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+    <div class="container">
+      <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Candle</th>
+              <th scope="col">Status</th>
+              <th scope="col">Last Lit</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for candle in candles %}
+            <tr>
+              <th scope="row">
+                  <a href="{% url 'candletime:candle' candle.candle.pk %}">{{ candle.candle.candle_name }}</a>
+              </th>
+              {% if candle.candle.status == True %}
+              <td>Lit</td>
+              {% else %}
+              <td>Extinguished</td>
+              {% endif %}
+              <td>{{ candle.date|date:'m/d/y' }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

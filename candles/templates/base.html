@@ -39,7 +39,12 @@
                     </li>
                     {% else %}
                     <li class="nav-item border-bottom text-center">
-                        <a href="{% url 'candletime:login' %}" class="nav-link">Login</a>
+                        <a href="{% url 'candletime:login' %}" class="nav-link">Sign-In</a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <li class="nav-item border-bottom text-center">
+                        <a href="{% url 'candletime:logout' %}" class="nav-link bg-secondary">Sign-Out</a>
                     </li>
                     {% endif %}
                 </ul>
