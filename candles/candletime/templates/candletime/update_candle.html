@@ -10,7 +10,16 @@
     </form>
     {% endif %}
 
-    <h1 class="text-center mb-3">{{ candle.candle_name }}</h1>
+    <div class="container text-center mb-3">
+        <div class="btn-group">
+            <button type="button" class="btn btn-warning btn-lg dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ candle.candle_name }}
+            </button>
+            <div class="dropdown-menu">
+              <a target="_blank" class="dropdown-item" href="{% url 'candletime:qr_gen' candle.pk %}">Get QR Code</a>
+            </div>
+          </div>
+    </div>
     
     <form method="post" action="{% url 'candletime:candle' pk %}">
         {% csrf_token %}

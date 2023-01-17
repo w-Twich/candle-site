@@ -7,6 +7,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('<int:pk>/', views.candle, name='candle'),
     path('<int:pk>/link-candle', views.link_user_candle, name='link_user'),
+    path('<int:pk>/qr-gen/', views.qr_gen, name="qr_gen"),
     path('new-candle/', views.new_candle_nokey, name='new_candle_nokey'),
     path('<int:pk>/new-candle/', views.new_candle, name='new_candle'),
     path('register/', views.register, name='register'),

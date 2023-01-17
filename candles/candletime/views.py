@@ -6,6 +6,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.db.models import F, Sum, Func, Max
 from django.contrib import messages
+import qrcode
+import qrcode.image.svg
+from io import BytesIO
 
 
 # Create your views here.
@@ -155,3 +158,15 @@ def link_user_candle(request, pk):
             print("form was not valid")
     else:
         return render(request, 'candletime/update_candle.html')
+
+# Generate a QR code
+def qr_gen(request, pk):
+    text = print(request.build_absolute_uri()[:-7])
+    context = {}
+    factory = qrcode.image.svg.SvgImage
+    img = qrcode.make(request.build_absolute_uri()[:-7], image_factory=factory, box_size=10)
+    stream = BytesIO()
+    img.save(stream)
+    context["svg"] = stream.getvalue().decode()
+
+    return render(request, "candletime/qr_gen.html", context=context)

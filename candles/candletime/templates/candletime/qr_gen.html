@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<body>
+    <div class="container shadow" style="max-width: 800px; margin-top: 5em; padding: 2em">
+        <h3>Here is your QR Code!</h3>
+        <div class="input-group mb-3">
+            <div style="margin: auto">
+                {{ svg|safe }}
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock %}
