@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load candle_extras %}
+{% block content %}
+
+<div class="container mt-5 pt-5">
+    <h2>Adjust your candle light and extinguish times below!</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="{{ form.light_time.id_for_label }}">{{ form.light_time.label }}</label>
+            <div class="input-group date">
+                {{ form.light_time }}
+                <span class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar"></i>
+                    </span>
+                </span>
+            </div>
+            <label for="{{ form.light_time.id_for_label }}">{{ form.extinguish_time.label }}</label>
+            <div class="input-group date">
+                {{ form.extinguish_time }}
+                <span class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="bi bi-calendar"></i>
+                    </span>
+                </span>
+            </div>
+            {% for error in form.light_time.errors %}
+                <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <input type="submit" class="btn btn-primary" value="Update">
+        <a href="{% url 'candletime:candle' candle_pk %}" class="btn btn-danger">Cancel</a>
+    </form>
+</div>
+
+{% endblock %}

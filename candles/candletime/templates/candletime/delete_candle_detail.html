@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load candle_extras %}
+{% block content %}
+
+<div class="container mt-5 pt-5">
+    <h2>Are you sure that you want to delete this candle log for {{ candle.candle_name }}?</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Start</th>
+                <th scope="col">Stop</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ candle_detail.light_time | date:'m/d h:i' }}</td>
+                <td>{{ candle_detail.extinguish_time | date:'m/d h:i'}}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Delete" class="btn btn-danger">
+    </form>
+</div>
+
+{% endblock %}

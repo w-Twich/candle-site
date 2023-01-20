@@ -3,12 +3,14 @@
 {% block content %}
 
 <div class="container mt-5 pt-5">
-    {% if is_connected == False and user.is_authenticated %}
-    <form method="post" action="{% url 'candletime:link_user' pk %}">
-        {% csrf_token %}
-        <input type="submit" class="btn btn-secondary" value="Add to my candles">
-    </form>
-    {% endif %}
+    <div class="d-grid justify-content-center mb-3">
+        {% if is_connected == False and user.is_authenticated %}
+        <form method="post" action="{% url 'candletime:link_user' pk %}">
+            {% csrf_token %}
+            <input type="submit" class="btn btn-secondary" value="Add to my candles">
+        </form>
+        {% endif %}
+    </div>
 
     <div class="container text-center mb-3">
         <div class="btn-group">
@@ -40,15 +42,41 @@
 <div class="container mt-5">
     <div class="mb-3">
         <h2>{{ candle.candle_name }}'s prior work:</h2>
-    </div>
-    {% for item in candle_detail %}
-    <p class="lead">{{ item.light_time|date:'m/d/y h:i' }} - {{ item.extinguish_time|date:'m/d/y h:i' }}</p>
-    <div class="container ml-5">
-        {% if item.extinguish_time %}
-        <p class="lead">Burn Time: {{ item.time_lit | duration:'phrase' }}</p>
-        {% endif %}
-    </div>
-    {% endfor %}
+</div>
+<div class="container mt-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Start</th>
+                <th scope="col">Stop</th>
+                <th scope="col">Burn Time</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in candle_detail %}
+            <tr>
+                <td>{{ item.light_time | date:'m/d h:i' }}</td>
+                <td>{{ item.extinguish_time | date:'m/d h:i'}}</td>
+                {% if item.extinguish_time %}
+                <td>{{ item.time_lit | duration:'phrase' }}</td>
+                <td>
+                    <div class="button-grp">
+                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'candletime:update_candle_detail' candle.pk item.pk %}">Edit</a></li>
+                            <li><a class="dropdown-item" href="{% url 'candletime:delete_candle_detail' candle.pk item.pk %}">Delete</a></li>
+                        </ul>
+                    </div>
+                </td>
+                {% else %}
+                <td></td>
+                <td></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import Candle, Candle_detail, UserCandle
 from django.contrib.auth.models import User
-from .forms import NewCandleForm, CandleForm, RegisterForm, LinkCandleForm
+from .forms import NewCandleForm, CandleForm, RegisterForm, LinkCandleForm, Candle_detailForm
 from django.urls import reverse
 from django.utils import timezone
 from django.db.models import F, Sum, Func, Max
@@ -13,23 +13,26 @@ from io import BytesIO
 
 # Create your views here.
 
+# Home page listing all candles connected to the current user
 def index(request):
     if request.user.id is not None:
         user_candles = UserCandle.objects.filter(user=request.user)
         candles = user_candles.select_related('candle').annotate(date=Max('candle__candle_detail__light_time')).order_by('-date')
-        #candles = Candle.objects.filter(id__in=user_candles)
         context = {'candles':candles}
     else:
         context = {}
     
     return render(request, 'candletime/index.html', context)
 
+# About page returning static html template
 def about(request):
     return render(request, 'candletime/about.html')
 
+# Contact page returning static html template
 def contact(request):
     return render(request, 'candletime/contact.html')
 
+# Main candle page
 def candle(request, pk):
     # Get the current candle status
     try:
@@ -44,8 +47,10 @@ def candle(request, pk):
         )
     ).order_by('-light_time')
 
+    # Calculate the total time the candle has been lit by summing the candle_detial burn times
     total_burn_time = candle_detail.aggregate(Sum('time_lit'))['time_lit__sum']
 
+    # Determine whether the logged in user is already linked to the candle
     check_candles = UserCandle.objects.filter(candle=pk, user=request.user.pk)
     if len(check_candles) == 0:
         is_connected = False
@@ -79,6 +84,7 @@ def candle(request, pk):
     else:
         return render(request, 'candletime/update_candle.html', context=context)
 
+# Create a new candle by scanning an unused QR Code
 def new_candle(request, pk):
     if request.method == 'POST':
         form = NewCandleForm(request.POST)
@@ -94,6 +100,7 @@ def new_candle(request, pk):
         form = NewCandleForm()
     return render(request, 'candletime/new_candle.html', {'form': form, 'pk': pk})
 
+# Create a new candle from the homepage (no key from new QR Code)
 def new_candle_nokey(request):
     if request.method == 'POST':
         form = NewCandleForm(request.POST)
@@ -170,3 +177,34 @@ def qr_gen(request, pk):
     context["svg"] = stream.getvalue().decode()
 
     return render(request, "candletime/qr_gen.html", context=context)
+
+# Update a specific candle detail
+def detail_update(request, candle_pk, detail_pk):
+    candle_detail = Candle_detail.objects.get(pk=detail_pk)
+    candle = Candle.objects.get(pk = candle_pk)
+    form = Candle_detailForm(instance=candle_detail)
+
+    if request.method == 'POST':
+        form = Candle_detailForm(request.POST, instance=candle_detail) # Prepopulate the form with an existing candle_detail
+        if form.is_valid():
+            # update the existing `candle_detail` in the database
+            form.save()
+            # redirect to the detail page of the `candle` we just updated
+            return redirect('candletime:candle', candle_pk)
+
+
+    return render(request, 'candletime/update_candle_detail.html', {'form':form, 'candle_pk': candle_pk})
+
+def detail_delete(request, candle_pk, detail_pk):
+    candle_detail = Candle_detail.objects.get(pk=detail_pk) # Get candle detail
+    candle = Candle.objects.get(pk=candle_pk) # Get candle object
+
+
+    if request.method == 'POST':
+        # Delete the selected candle detail
+        candle_detail.delete()
+        # Redirect to candle page
+        return(redirect('candletime:candle', candle_pk))
+    
+    return render(request, 'candletime/delete_candle_detail.html', {'candle':candle, 'candle_detail':candle_detail})
+    

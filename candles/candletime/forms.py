@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from .models import Candle_detail
+from django.forms import DateTimeInput
 
 # Update Candle Form.
 class CandleForm(forms.Form):
@@ -57,3 +59,19 @@ class RegisterForm(UserCreationForm):
 class LinkCandleForm(forms.Form):
     candle_key = forms.IntegerField(required=False)
     user_key = forms.IntegerField(required=False)
+
+# Form to update an existing candle detail
+class Candle_detailForm(forms.Form):
+    light_time = forms.DateTimeField(required=True)
+    extinguish_time = forms.DateTimeField(required=True)
+
+class Candle_detailForm(forms.ModelForm):
+    class Meta:
+        model = Candle_detail
+        fields = ['light_time','extinguish_time']
+        
+        widgets = {
+            'light_time':forms.DateTimeInput(),
+            'extinguish_time':forms.DateTimeInput()
+        }
+
